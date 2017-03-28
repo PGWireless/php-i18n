@@ -60,6 +60,14 @@ class I18N
     }
 
     /**
+     * 释放实例，使得可以重新 new 出新对象
+     */
+    public static function releaseInstance()
+    {
+        self::$i18n = null;
+    }
+
+    /**
      * Translates a message to the specified language.
      *
      * This is a shortcut method of [[\PG\I18N::translate()]].
