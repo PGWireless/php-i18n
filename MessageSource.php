@@ -1,6 +1,6 @@
 <?php
 
-namespace PG\I18N;
+namespace PG\I18n;
 
 /**
  * MessageSource is the base class for message translation repository classes.
@@ -21,23 +21,10 @@ class MessageSource
     public $forceTranslation = false;
     /**
      * @var string the language that the original messages are in. If not set, it will use the value of
-     * [[\yii\base\Application::sourceLanguage]].
      */
-    public $sourceLanguage;
+    public $sourceLanguage = 'en-us';
 
     private $_messages = [];
-
-
-    /**
-     * Initializes this component.
-     */
-    public function init()
-    {
-        parent::init();
-        if ($this->sourceLanguage === null) {
-            $this->sourceLanguage = Yii::$app->sourceLanguage;
-        }
-    }
 
     /**
      * Loads the message translation for the specified language and category.
@@ -89,8 +76,8 @@ class MessageSource
      */
     protected function translateMessage($category, $message, $language)
     {
-        $key = $language . '/' . $category;
-        if (! isset($this->_messages[$key])) {
+        $key = $language . '/' . $category; // eg: en_us/errno
+        if (!isset($this->_messages[$key])) {
             $this->_messages[$key] = $this->loadMessages($category, $language);
         }
         if (isset($this->_messages[$key][$message]) && $this->_messages[$key][$message] !== '') {

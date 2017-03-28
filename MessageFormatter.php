@@ -116,7 +116,7 @@ class MessageFormatter
      * @param string $message The message to parse, conforming to the pattern.
      * @param string $language The locale to use for formatting locale-dependent parts
      * @return array|boolean An array containing items extracted, or `FALSE` on error.
-     * @throws \yii\base\NotSupportedException when PHP intl extension is not installed.
+     * @throws \Exception when PHP intl extension is not installed.
      */
     public function parse($pattern, $message, $language)
     {
@@ -124,7 +124,7 @@ class MessageFormatter
         $this->_errorMessage = '';
 
         if (! class_exists('MessageFormatter', false)) {
-            throw new NotSupportedException('You have to install PHP intl extension to use this feature.');
+            throw new \Exception('You have to install PHP intl extension to use this feature.');
         }
 
         // replace named arguments

@@ -2,8 +2,6 @@
 
 namespace PG\I18N;
 
-use PG\Log\PGLog;
-
 /**
  * I18N provides features related with internationalization (I18N) and localization (L10N).
  *
@@ -16,7 +14,10 @@ use PG\Log\PGLog;
  */
 class I18N
 {
-    public $log = null;
+    /**
+     * @var null
+     */
+    public static $i18n = null;
 
     /**
      * @var array list of [[MessageSource]] configurations or objects. The array keys are message
@@ -41,6 +42,24 @@ class I18N
     public $translations;
 
     /**
+     * 实例化
+     * @param array $config 配置，如：
+     * [
+     *     'class' => 'PhpMessageSource',
+     *     'sourceLanguage' => 'en_us',
+     *     'basePath' => '<DIR>/messages', // 翻译配置文件路径
+     * ]
+     */
+    public static function getInstance(array $config)
+    {
+        if (self::$i18n === null) {
+            self::$i18n = new self($config);
+        }
+
+        return self::$i18n;
+    }
+
+    /**
      * Translates a message to the specified language.
      *
      * This is a shortcut method of [[\PG\I18N::translate()]].
@@ -56,41 +75,37 @@ class I18N
      * ```
      *
      * Further formatting of message parameters is supported using the [PHP intl extensions](http://www.php.net/manual/en/intro.intl.php)
-     * message formatter. See [[\yii\i18n\I18N::translate()]] for more details.
+     * message formatter. See [[\PG\I18N::translate()]] for more details.
      *
      * @param string $category the message category.
      * @param string $message the message to be translated.
      * @param array $params the parameters that will be used to replace the corresponding placeholders in the message.
-     * @param string $language the language code (e.g. `en-US`, `en`). If this is null, the current
+     * @param string $language the language code (e.g. `en-us`, `en`). If this is null, the current
      * [application language] will be used.
      * @return string the translated message.
      */
     public static function t($category, $message, $params = [], $language = null)
     {
-        if (static::$app !== null) {
-            return static::$app->getI18n()->translate($category, $message, $params, $language ?: static::$app->language);
+        if (self::$i18n === null) {
+            self::$i18n = new self();
         }
 
-        $placeholders = [];
-        foreach ((array) $params as $name => $value) {
-            $placeholders['{' . $name . '}'] = $value;
-        }
-
-        return ($placeholders === []) ? $message : strtr($message, $placeholders);
+        return self::$i18n->translate($category, $message, $params, $language ?: 'en_us');
     }
 
     /**
      * Initializes the component by configuring the default message categories.
+     * @param array $config 配置，如：
+     * [
+     *     'class' => 'PhpMessageSource',
+     *     'sourceLanguage' => 'en_us',
+     *     'basePath' => '<DIR>/messages', // 翻译配置文件路径
+     * ]
      */
-    public function __construct(PGLog $log = null)
+    public function __construct(array $config)
     {
-        $this->log = $log;
         if (! isset($this->translations['app']) && ! isset($this->translations['app*'])) {
-            $this->translations['app'] = [
-                'class' => 'PG\I18N\PhpMessageSource',
-                'sourceLanguage' => 'en-us',
-                'basePath' => '@app/messages',
-            ];
+            $this->translations['app'] = $config;
         }
     }
 
@@ -103,7 +118,7 @@ class I18N
      * @param string $category the message category.
      * @param string $message the message to be translated.
      * @param array $params the parameters that will be used to replace the corresponding placeholders in the message.
-     * @param string $language the language code (e.g. `en-US`, `en`).
+     * @param string $language the language code (e.g. `en-us`, `en`).
      * @return string the translated and formatted message.
      */
     public function translate($category, $message, $params, $language)
@@ -136,9 +151,7 @@ class I18N
             $formatter = $this->getMessageFormatter();
             $result = $formatter->format($message, $params, $language);
             if ($result === false) {
-                $errorMessage = $formatter->getErrorMessage();
-                $this->log && $this->log->warning("Formatting message for language '$language' failed with error: $errorMessage. The message being formatted was: $message METHOD: __METHOD__");
-
+                // $errorMessage = $formatter->getErrorMessage();
                 return $message;
             } else {
                 return $result;
@@ -167,7 +180,7 @@ class I18N
         if ($this->_messageFormatter === null) {
             $this->_messageFormatter = new MessageFormatter();
         } elseif (is_array($this->_messageFormatter) || is_string($this->_messageFormatter)) {
-            $this->_messageFormatter = Yii::createObject($this->_messageFormatter);
+            $this->_messageFormatter = self::createObject($this->_messageFormatter);
         }
 
         return $this->_messageFormatter;
@@ -175,7 +188,7 @@ class I18N
 
     /**
      * @param string|array|MessageFormatter $value the message formatter to be used to format message via ICU message format.
-     * Can be given as array or string configuration that will be given to [[Yii::createObject]] to create an instance
+     * Can be given as array or string configuration that will be given to [[self::createObject]] to create an instance
      * or a [[MessageFormatter]] instance.
      */
     public function setMessageFormatter($value)
@@ -196,16 +209,16 @@ class I18N
             if ($source instanceof MessageSource) {
                 return $source;
             } else {
-                return $this->translations[$category] = Yii::createObject($source);
+                return $this->translations[$category] = self::createObject($source);
             }
         } else {
-            // try wildcard matching
+            // try wildcard matching 前缀通配符方式
             foreach ($this->translations as $pattern => $source) {
                 if (strpos($pattern, '*') > 0 && strpos($category, rtrim($pattern, '*')) === 0) {
                     if ($source instanceof MessageSource) {
                         return $source;
                     } else {
-                        return $this->translations[$category] = $this->translations[$pattern] = Yii::createObject($source);
+                        return $this->translations[$category] = $this->translations[$pattern] = self::createObject($source);
                     }
                 }
             }
@@ -215,11 +228,64 @@ class I18N
                 if ($source instanceof MessageSource) {
                     return $source;
                 } else {
-                    return $this->translations[$category] = $this->translations['*'] = Yii::createObject($source);
+                    return $this->translations[$category] = $this->translations['*'] = self::createObject($source);
                 }
             }
         }
 
         throw new \Exception("Unable to locate message source for category '$category'.");
+    }
+
+    /**
+     * Creates a new object using the given configuration.
+     *
+     * The method supports creating an object based on a class name, a configuration array or
+     * an anonymous function.
+     *
+     * Below are some usage examples:
+     *
+     * ```php
+     * // create an object using a class name
+     * $object = self::createObject('PhpMessageSource');
+     *
+     * // create an object using a configuration array
+     * $object = self::createObject([
+     *     'class' => 'PhpMessageSource',
+     *     'sourceLanguage' => 'PhpMessageSource',
+     *     'basePath' => '@app/messages'
+     * ]);
+     *
+     * // create an object with two constructor parameters
+     * $object = self::createObject('MyClass', [$param1, $param2]);
+     * ```
+     *
+     * @param string|array|callable $type the object type. This can be specified in one of the following forms:
+     *
+     * - a string: representing the class name of the object to be created
+     * - a configuration array: the array must contain a `class` element which is treated as the object class,
+     *   and the rest of the name-value pairs will be used to initialize the corresponding object properties
+     * - a PHP callable: either an anonymous function or an array representing a class method (`[$class or $object, $method]`).
+     *   The callable should return a new instance of the object being created.
+     *
+     * @param array $params the constructor parameters
+     * @return object the created object
+     * @throws Exception if the configuration is invalid.
+     */
+    public static function createObject($type, array $params = [])
+    {
+        if (is_string($type)) {
+            return new $type;
+        } elseif (is_array($type) && isset($type['class'])) {
+            $class = $type['class'];
+            unset($type['class']);
+            $clazz = new $class;
+            foreach ($type as $prop => $val) {
+                $clazz->$prop = $val;
+            }
+        } elseif (is_array($type)) {
+            throw new \Exception('Object configuration must be an array containing a "class" element.');
+        }
+
+        throw new \Exception('Unsupported configuration type: ' . gettype($type));
     }
 }

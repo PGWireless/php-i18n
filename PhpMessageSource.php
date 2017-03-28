@@ -27,9 +27,9 @@ namespace PG\I18N;
 class PhpMessageSource extends MessageSource
 {
     /**
-     * @var string the base path for all translated messages. Defaults to '@app/messages'.
+     * @var string the base path for all translated messages. Defaults to '<DIR>/messages'.
      */
-    public $basePath = '@app/messages';
+    public $basePath = '';
     /**
      * @var array mapping between message categories and the corresponding message file paths.
      * The file paths are relative to [[basePath]]. For example,
@@ -64,8 +64,7 @@ class PhpMessageSource extends MessageSource
             $fallbackMessages = $this->loadMessagesFromFile($fallbackMessageFile);
 
             if ($messages === null && $fallbackMessages === null && $fallbackLanguage !== $this->sourceLanguage) {
-                Yii::error("The message file for category '$category' does not exist: $messageFile Fallback file does not exist as well: $fallbackMessageFile",
-                    __METHOD__);
+                // ...
             } elseif (empty($messages)) {
                 return $fallbackMessages;
             } elseif (! empty($fallbackMessages)) {
@@ -77,7 +76,7 @@ class PhpMessageSource extends MessageSource
             }
         } else {
             if ($messages === null) {
-                Yii::error("The message file for category '$category' does not exist: $messageFile", __METHOD__);
+                // ...
             }
         }
 
@@ -93,7 +92,7 @@ class PhpMessageSource extends MessageSource
      */
     protected function getMessageFilePath($category, $language)
     {
-        $messageFile = Yii::getAlias($this->basePath) . "/$language/";
+        $messageFile = $this->basePath . "/$language/";
         if (isset($this->fileMap[$category])) {
             $messageFile .= $this->fileMap[$category];
         } else {
