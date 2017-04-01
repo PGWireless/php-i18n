@@ -47,7 +47,7 @@ class I18N
      * [
      *     'class' => 'PhpMessageSource',
      *     'sourceLanguage' => 'en_us',
-     *     'basePath' => '<DIR>/messages', // 翻译配置文件路径
+     *     'basePath' => '<DIR>/Languages', // 翻译配置文件路径
      * ]
      */
     public static function getInstance(array $config)
