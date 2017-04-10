@@ -44,14 +44,11 @@ class PhpMessageSource extends MessageSource
     public $fileMap;
 
     /**
-     * Loads the message translation for the specified language and category.
-     * If translation for specific locale code such as `en-US` isn't found it
-     * tries more generic `en`.
+     * 加载语言
      *
-     * @param string $category the message category
-     * @param string $language the target language
-     * @return array the loaded messages. The keys are original messages, and the values
-     * are translated messages.
+     * @param string $category 分类
+     * @param string $language 语言
+     * @return array|mixed|null
      */
     protected function loadMessages($category, $language)
     {
@@ -84,11 +81,11 @@ class PhpMessageSource extends MessageSource
     }
 
     /**
-     * Returns message file path for the specified language and category.
+     * 获取文件路径
      *
-     * @param string $category the message category
-     * @param string $language the target language
-     * @return string path to message file
+     * @param string $category 分类
+     * @param string $language 语言
+     * @return string
      */
     protected function getMessageFilePath($category, $language)
     {
@@ -103,10 +100,10 @@ class PhpMessageSource extends MessageSource
     }
 
     /**
-     * Loads the message translation for the specified language and category or returns null if file doesn't exist.
+     * 从翻译配置文件中加载
      *
-     * @param string $messageFile path to message file
-     * @return array|null array of messages or null if file not found
+     * @param $messageFile
+     * @return array|mixed|null
      */
     protected function loadMessagesFromFile($messageFile)
     {

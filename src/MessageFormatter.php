@@ -3,35 +3,10 @@
 namespace PG\I18N;
 
 /**
- * MessageFormatter allows formatting messages via [ICU message format](http://userguide.icu-project.org/formatparse/messages)
+ * 翻译信息格式化
  *
- * This class enhances the message formatter class provided by the PHP intl extension.
- *
- * The following enhancements are provided:
- *
- * - It accepts named arguments and mixed numeric and named arguments.
- * - Issues no error when an insufficient number of arguments have been provided. Instead, the placeholders will not be
- *   substituted.
- * - Fixes PHP 5.5 weird placeholder replacement in case no arguments are provided at all (https://bugs.php.net/bug.php?id=65920).
- * - Offers limited support for message formatting in case PHP intl extension is not installed.
- *   However it is highly recommended that you install [PHP intl extension](http://php.net/manual/en/book.intl.php) if you want
- *   to use MessageFormatter features.
- *
- *   The fallback implementation only supports the following message formats:
- *   - plural formatting for english ('one' and 'other' selectors)
- *   - select format
- *   - simple parameters
- *   - integer number parameters
- *
- *   The fallback implementation does NOT support the ['apostrophe-friendly' syntax](http://www.php.net/manual/en/messageformatter.formatmessage.php).
- *   Also messages that are working with the fallback implementation are not necessarily compatible with the
- *   PHP intl MessageFormatter so do not rely on the fallback if you are able to install intl extension somehow.
- *
- * @property string $errorCode Code of the last error. This property is read-only.
- * @property string $errorMessage Description of the last error. This property is read-only.
- *
- * @author camera360_server@camera360.com
- * @copyright Chengdu pinguo Technology Co.,Ltd.
+ * Class MessageFormatter
+ * @package PG\I18N
  */
 class MessageFormatter
 {
@@ -59,16 +34,12 @@ class MessageFormatter
     }
 
     /**
-     * Formats a message via [ICU message format](http://userguide.icu-project.org/formatparse/messages)
+     * 格式化
      *
-     * It uses the PHP intl extension's [MessageFormatter](http://www.php.net/manual/en/class.messageformatter.php)
-     * and works around some issues.
-     * If PHP intl is not installed a fallback will be used that supports a subset of the ICU message format.
-     *
-     * @param string $pattern The pattern string to insert parameters into.
-     * @param array $params The array of name value pairs to insert into the format string.
-     * @param string $language The locale to use for formatting locale-dependent parts
-     * @return string|boolean The formatted pattern string or `FALSE` if an error occurred
+     * @param string $pattern 规则模式
+     * @param array $params 参数
+     * @param string $language 语言
+     * @return bool|string
      */
     public function format($pattern, $params, $language)
     {
@@ -106,17 +77,13 @@ class MessageFormatter
     }
 
     /**
-     * Parses an input string according to an [ICU message format](http://userguide.icu-project.org/formatparse/messages) pattern.
+     * 解析
      *
-     * It uses the PHP intl extension's [MessageFormatter::parse()](http://www.php.net/manual/en/messageformatter.parsemessage.php)
-     * and adds support for named arguments.
-     * Usage of this method requires PHP intl extension to be installed.
-     *
-     * @param string $pattern The pattern to use for parsing the message.
-     * @param string $message The message to parse, conforming to the pattern.
-     * @param string $language The locale to use for formatting locale-dependent parts
-     * @return array|boolean An array containing items extracted, or `FALSE` on error.
-     * @throws \Exception when PHP intl extension is not installed.
+     * @param string $pattern
+     * @param string $message
+     * @param string $language
+     * @return array|bool
+     * @throws \Exception
      */
     public function parse($pattern, $message, $language)
     {
@@ -172,13 +139,13 @@ class MessageFormatter
     }
 
     /**
-     * Replace named placeholders with numeric placeholders and quote unused.
+     * 替换字符串中的参数
      *
-     * @param string $pattern The pattern string to replace things into.
-     * @param array $givenParams The array of values to insert into the format string.
-     * @param array $resultingParams Modified array of parameters.
+     * @param string $pattern
+     * @param array $givenParams
+     * @param array $resultingParams
      * @param array $map
-     * @return string The pattern string with placeholders replaced.
+     * @return bool|string
      */
     private function replaceNamedArguments($pattern, $givenParams, &$resultingParams, &$map = [])
     {

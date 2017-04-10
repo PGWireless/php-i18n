@@ -27,14 +27,11 @@ class MessageSource
     private $_messages = [];
 
     /**
-     * Loads the message translation for the specified language and category.
-     * If translation for specific locale code such as `en-US` isn't found it
-     * tries more generic `en`.
+     * 加载语言
      *
-     * @param string $category the message category
-     * @param string $language the target language
-     * @return array the loaded messages. The keys are original messages, and the values
-     * are translated messages.
+     * @param string $category 分类
+     * @param string $language 语言
+     * @return array
      */
     protected function loadMessages($category, $language)
     {
@@ -42,18 +39,12 @@ class MessageSource
     }
 
     /**
-     * Translates a message to the specified language.
+     * 执行翻译
      *
-     * Note that unless [[forceTranslation]] is true, if the target language
-     * is the same as the [[sourceLanguage|source language]], the message
-     * will NOT be translated.
-     *
-     * If a translation is not found, a [[EVENT_MISSING_TRANSLATION|missingTranslation]] event will be triggered.
-     *
-     * @param string $category the message category
-     * @param string $message the message to be translated
-     * @param string $language the target language
-     * @return string|boolean the translated message or false if translation wasn't found or isn't required
+     * @param string $category 分类
+     * @param string $message 要翻译的信息
+     * @param string $language 要翻译成的语言
+     * @return bool|string
      */
     public function translate($category, $message, $language)
     {
@@ -65,14 +56,12 @@ class MessageSource
     }
 
     /**
-     * Translates the specified message.
-     * If the message is not found, a [[EVENT_MISSING_TRANSLATION|missingTranslation]] event will be triggered.
-     * If there is an event handler, it may provide a [[MissingTranslationEvent::$translatedMessage|fallback translation]].
-     * If no fallback translation is provided this method will return `false`.
-     * @param string $category the category that the message belongs to.
-     * @param string $message the message to be translated.
-     * @param string $language the target language.
-     * @return string|boolean the translated message or false if translation wasn't found.
+     * 执行翻译
+     *
+     * @param string $category 分类
+     * @param string $message 要翻译的信息
+     * @param string $language 要翻译成的语言
+     * @return bool|string
      */
     protected function translateMessage($category, $message, $language)
     {
