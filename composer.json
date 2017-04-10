@@ -1,19 +1,19 @@
 {
-    "name": "PGWireless/php-i18n",
-    "description": "Pinguo PHP i18n lib",
-    "type": "library",
-    "license": "proprietary",
-    "support": {
-        "issues": "https://github.com/PGWireless/php-i18n/issues?state=open",
-        "wiki": "https://github.com/PGWireless/php-i18n/wiki",
-        "source": "https://github.com/PGWireless/php-i18n"
-    },
-    "require": {
-        "php": ">=7.0"
-    },
-    "autoload": {
-        "psr-4": {
-            "PG\\I18n\\": "src"
-        }
+  "name": "PGWireless/php-i18n",
+  "description": "Pinguo PHP i18n lib",
+  "type": "library",
+  "license": "proprietary",
+  "support": {
+    "issues": "https://github.com/PGWireless/php-i18n/issues?state=open",
+    "wiki": "https://github.com/PGWireless/php-i18n/wiki",
+    "source": "https://github.com/PGWireless/php-i18n"
+  },
+  "require": {
+    "php": ">=7.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "PG\\I18N\\": "src"
     }
+  }
 }

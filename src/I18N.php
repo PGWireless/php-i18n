@@ -94,10 +94,6 @@ class I18N
      */
     public static function t($category, $message, $params = [], $language = null)
     {
-        if (self::$i18n === null) {
-            self::$i18n = new self();
-        }
-
         return self::$i18n->translate($category, $message, $params, $language ?: 'en_us');
     }
 

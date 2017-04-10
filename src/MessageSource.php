@@ -1,6 +1,6 @@
 <?php
 
-namespace PG\I18n;
+namespace PG\I18N;
 
 /**
  * MessageSource is the base class for message translation repository classes.
