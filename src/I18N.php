@@ -31,10 +31,17 @@ class I18N
      *     'class' => 'PhpMessageSource',
      *     'sourceLanguage' => 'en_us',
      *     'basePath' => '<DIR>/Languages', // 翻译配置文件路径
+     *     'fileMap' => [
+     *         'common' => 'common.php',
+     *         'error' => 'error.php'
+     *     ]
      * ]
      */
     public static function getInstance(array $config)
     {
+        if (empty($config)) {
+            throw new \Exception('i18n configuration can not be empty.');
+        }
         if (self::$i18n === null) {
             self::$i18n = new self($config);
         }
@@ -66,10 +73,10 @@ class I18N
      * Initializes the component by configuring the default message categories.
      * @param array $config 配置，如：
      * [
-     *     'class' => 'PhpMessageSource',
-     *     'sourceLanguage' => 'en_us',
-     *     'basePath' => '<DIR>/Languages', // 翻译配置文件路径
-     *     'fileMap' => [
+     *     'class' => 'PhpMessageSource', <选填>
+     *     'sourceLanguage' => 'en_us', <必填>
+     *     'basePath' => '<DIR>/Languages', // 翻译配置文件路径 <必填>
+     *     'fileMap' => [ <必填>
      *         'common' => 'common.php',
      *         'error' => 'error.php'
      *     ]
@@ -194,7 +201,7 @@ class I18N
         if (is_string($type)) {
             return new $type;
         } elseif (is_array($type) && isset($type['class'])) {
-            $class = $type['class'];
+            $class = $type['class'] ?? 'PhpMessageSource';
             unset($type['class']);
             $clazz = new $class;
             foreach ($type as $prop => $val) {
