@@ -66,6 +66,9 @@ class I18N
      */
     public static function t($category, $message, $params = [], $language = null)
     {
+        if (self::$i18n === null) {
+            throw new \Exception('Has not instantiated i18n.');
+        }
         return self::$i18n->translate($category, $message, $params, $language ?: 'en_us');
     }
 
@@ -200,8 +203,8 @@ class I18N
     {
         if (is_string($type)) {
             return new $type;
-        } elseif (is_array($type) && isset($type['class'])) {
-            $class = $type['class'] ?? 'PhpMessageSource';
+        } elseif (is_array($type)) {
+            $class = '\\PG\\I18N\\' . ($type['class'] ?? 'PhpMessageSource');
             unset($type['class']);
             $clazz = new $class;
             foreach ($type as $prop => $val) {
