@@ -79,12 +79,23 @@ class I18N
      * Initializes the component by configuring the default message categories.
      * @param array $config 配置，如：
      * [
-     *     'class' => 'PhpMessageSource', <选填>
-     *     'sourceLanguage' => 'en_us', <必填>
-     *     'basePath' => '<DIR>/Languages', // 翻译配置文件路径 <必填>
-     *     'fileMap' => [ <必填>
-     *         'common' => 'common.php',
-     *         'error' => 'error.php'
+     *     'app' => [
+     *         'class' => 'PhpMessageSource', <选填>
+     *         'sourceLanguage' => 'en_us', <必填>
+     *         'basePath' => '<DIR>/Languages', // 翻译配置文件路径 <必填>
+     *         'fileMap' => [ <必填>
+     *             'common' => 'common.php',
+     *             'error' => 'error.php'
+     *         ]
+     *     ],
+     *     'other' => [
+     *         'class' => 'PhpMessageSource', <选填>
+     *         'sourceLanguage' => 'en_us', <必填>
+     *         'basePath' => '<DIR>/other/Languages', // 翻译配置文件路径 <必填>
+     *         'fileMap' => [ <必填>
+     *             'a' => 'a.php',
+     *             'b' => 'b.php'
+     *         ]
      *     ]
      * ]
      */
