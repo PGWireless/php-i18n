@@ -87,7 +87,9 @@ class I18N
      */
     public function __construct(array $config)
     {
-        $this->translations['*'] = $config;
+        foreach ($config as $key => $translation) {
+            $this->translations[$key] = $translation;
+        }
     }
 
     /**
@@ -180,12 +182,17 @@ class I18N
      */
     public function getMessageSource($category)
     {
-        if (isset($this->translations['*'])) {
-            $source = $this->translations['*'];
+        if (strpos($category, '.') === false) {
+            $prefix = 'app';
+        } else {
+            $prefix = explode('.', $category)[0];
+        }
+        if (isset($this->translations[$prefix])) {
+            $source = $this->translations[$prefix];
             if ($source instanceof MessageSource) {
                 return $source;
             } else {
-                return $this->translations[$category] = $this->translations['*'] = static::createObject($source);
+                return $this->translations[$prefix] = static::createObject($source);
             }
         }
 
@@ -211,8 +218,6 @@ class I18N
                 $clazz->$prop = $val;
             }
             return $clazz;
-        } elseif (is_array($type)) {
-            throw new \Exception('Object configuration must be an array containing a "class" element.');
         }
 
         throw new \Exception('Unsupported configuration type: ' . gettype($type));
