@@ -58,6 +58,10 @@ class I18N
     }
 
     /**
+     * 多语言翻译，使用方法如：
+     * 1) I18N::t('common', 'hot', [], 'zh_cn'); // 默认为 app.common
+     * 2) I18N::t('app.common', 'hot', [], 'zh_cn'); // 结果同 1)
+     * 3) I18N::t('msg.a', 'hello', ['{foo}' => 'bar', '{key}' => 'val'], 'ja_jp');
      * @param string $category
      * @param string $message
      * @param array $params
@@ -80,7 +84,7 @@ class I18N
      * @param array $config 配置，如：
      * [
      *     'app' => [
-     *         'class' => 'PhpMessageSource', <选填>
+     *         'class' => 'PhpMessageSource', <选填，默认为 PhpMessageSource>
      *         'sourceLanguage' => 'en_us', <必填>
      *         'basePath' => '<DIR>/Languages', // 翻译配置文件路径 <必填>
      *         'fileMap' => [ <必填>
