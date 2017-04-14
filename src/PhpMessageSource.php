@@ -46,7 +46,7 @@ class PhpMessageSource extends MessageSource
     /**
      * 加载语言
      *
-     * @param string $category 分类
+     * @param string $category 分类 eg app.errno
      * @param string $language 语言
      * @return array|mixed|null
      */
@@ -89,11 +89,12 @@ class PhpMessageSource extends MessageSource
      */
     protected function getMessageFilePath($category, $language)
     {
+        $suffix = explode('.', $category)[1];
         $messageFile = $this->basePath . "/$language/";
-        if (isset($this->fileMap[$category])) {
-            $messageFile .= $this->fileMap[$category];
+        if (isset($this->fileMap[$suffix])) {
+            $messageFile .= $this->fileMap[$suffix];
         } else {
-            $messageFile .= str_replace('\\', '/', $category) . '.php';
+            $messageFile .= str_replace('\\', '/', $suffix) . '.php';
         }
 
         return $messageFile;

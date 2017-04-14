@@ -69,6 +69,9 @@ class I18N
         if (self::$i18n === null) {
             throw new \Exception('Has not instantiated i18n.');
         }
+        if (strpos($category, '.') === false) {
+            $category = 'app.' . $category;
+        }
         return self::$i18n->translate($category, $message, $params, $language ?: 'en_us');
     }
 
@@ -176,17 +179,13 @@ class I18N
 
     /**
      * Returns the message source for the given category.
-     * @param string $category the category name.
+     * @param string $category the category name, eg. app.errno
      * @return MessageSource the message source for the given category.
      * @throws InvalidConfigException if there is no message source available for the specified category.
      */
     public function getMessageSource($category)
     {
-        if (strpos($category, '.') === false) {
-            $prefix = 'app';
-        } else {
-            $prefix = explode('.', $category)[0];
-        }
+        $prefix = explode('.', $category)[0];
         if (isset($this->translations[$prefix])) {
             $source = $this->translations[$prefix];
             if ($source instanceof MessageSource) {

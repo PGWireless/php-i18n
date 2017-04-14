@@ -65,7 +65,8 @@ class MessageSource
      */
     protected function translateMessage($category, $message, $language)
     {
-        $key = $language . '/' . $category; // eg: en_us/errno
+        $cates = explode('.', $category);
+        $key = $cates[0] . '/' . $language . '/' . $cates[1]; // eg: app/en_us/errno
         if (!isset($this->_messages[$key])) {
             $this->_messages[$key] = $this->loadMessages($category, $language);
         }
