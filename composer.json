@@ -1,8 +1,8 @@
 {
   "name": "PGWireless/php-i18n",
   "description": "Pinguo PHP i18n lib",
+  "license": "BSD-3-Clause",
   "type": "library",
-  "license": "proprietary",
   "support": {
     "issues": "https://github.com/PGWireless/php-i18n/issues?state=open",
     "wiki": "https://github.com/PGWireless/php-i18n/wiki",
@@ -15,5 +15,12 @@
     "psr-4": {
       "PG\\I18N\\": "src"
     }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true,
+  "extra": {
+  },
+  "config": {
+    "secure-http": false
   }
 }
