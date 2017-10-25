@@ -1,12 +1,12 @@
 {
-  "name": "PGWireless/php-i18n",
+  "name": "pinguo/php-i18n",
   "description": "Pinguo PHP i18n lib",
-  "license": "BSD-3-Clause",
+  "license": "GPL",
   "type": "library",
   "support": {
-    "issues": "https://github.com/PGWireless/php-i18n/issues?state=open",
-    "wiki": "https://github.com/PGWireless/php-i18n/wiki",
-    "source": "https://github.com/PGWireless/php-i18n"
+    "issues": "https://github.com/pinguo/php-i18n/issues?state=open",
+    "wiki": "https://github.com/pinguo/php-i18n/wiki",
+    "source": "https://github.com/pinguo/php-i18n"
   },
   "require": {
     "php": ">=7.0"
