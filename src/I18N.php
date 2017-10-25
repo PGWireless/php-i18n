@@ -14,9 +14,7 @@ namespace PG\I18N;
  */
 class I18N
 {
-    /**
-     * @var null
-     */
+    /** @var self */
     public static $i18n = null;
 
     /**
@@ -103,7 +101,7 @@ class I18N
      *     ]
      * ]
      */
-    public function __construct(array $config)
+    private function __construct(array $config)
     {
         foreach ($config as $key => $translation) {
             $this->translations[$key] = $translation;
